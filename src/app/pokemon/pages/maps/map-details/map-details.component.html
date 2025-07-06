@@ -1,0 +1,30 @@
+<app-title [title]="`${mapId}`"/>
+
+<div class="map-container">
+  <div class="map-frame" #mapFrame
+       (mousedown)="startPan($event)"
+       (mousemove)="pan($event)"
+       (mouseup)="endPan()"
+       (mouseleave)="endPan()"
+       (touchstart)="startPan($event)"
+       (touchmove)="pan($event)"
+       (touchend)="endPan()">
+    <img
+      [src]="`assets/images/maps/${mapId}.png`"
+      alt="Mapa Pokémon"
+      class="map-image"
+      #mapImage
+      [style.transform]="'scale(' + zoomLevel + ') translate(' + panX + 'px, ' + panY + 'px)'"
+      (load)="onImageLoad()"
+    >
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" (click)="zoomIn()">+</button>
+    <button class="zoom-btn" (click)="zoomOut()">-</button>
+  </div>
+</div>
+
+<div class="m-8 p-8 border border-amber-400 rounded-2xl bg-blue-950">
+  <p class="font-pokeDP text-4xl text-white">Credits to EUANVERSE DeviantArt</p>
+  <a href="https://www.deviantart.com/euanverse/gallery/71654862/pokemon-region-maps" class="hover:text-red-700 text-xl text-green-400">Link</a>
+</div>

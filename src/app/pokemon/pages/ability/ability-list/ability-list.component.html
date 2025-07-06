@@ -1,0 +1,25 @@
+<app-title title="Lista de Habilidades"/>
+
+<app-search (search)="onSearch($event)" placeHolder="Busca Habilidad por nombre..."></app-search>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-8">
+  @if (abilityResource.isLoading()) {
+        <div class="flex w-82 flex-col gap-4">
+          <div class="skeleton h-12 w-full mx-7">
+            <p class="mt-3 mx-2">Cargando Habilidades...</p>
+          </div>
+        </div>
+    }@else {
+  @for (ability of abilityResource.value()?.results; track $index) {
+    <a [routerLink]="['/ability', ability.name]" class="animate-fadeIn hover:scale-102 transition-transform duration-200">
+      <div class="px-4 py-2 text-2xl font-semibold rounded-xl bg-green-700 border text-white text-center">
+        <p>{{ ability.name | titlecase | replace }}</p>
+      </div>
+    </a>
+  } @empty {
+    <p>Ninguna habilidad encontrada.</p>
+  }
+}
+</div>
+
+<app-pagination [pages]="totalPages()" [currentPage]="paginationService.currentPage()"></app-pagination>

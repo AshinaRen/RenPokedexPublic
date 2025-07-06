@@ -1,0 +1,154 @@
+<div class="p-6 rounded-lg shadow-lg bg-base-100 font-pokeDP">
+  <!-- Loading State -->
+  @if (moveResource.isLoading()) {
+    <div class="text-center text-gray-500 text-3xl">Cargando detalles del movimiento...</div>
+  } @else if (!pokeMove()) {
+    <div class="text-center text-red-500 text-3xl">No se encontraron detalles para este movimiento.</div>
+  } @else {
+    <!-- Información Principal del Movimiento -->
+    <div class="space-y-6">
+      <!-- Título del Movimiento -->
+
+      <div class="flex justify-center items-center mb-6">
+        <div class="border-4 border-primary rounded-lg bg-base-200 p-6 text-center">
+          <app-title [title]="pokeMove()!.name | replace | titlecase" />
+          <img
+            [src]="`assets/images/bg-types/${pokeMove()!.type.name.toLowerCase()}.png`"
+            [alt]="pokeMove()!.type.name"
+            class="w-24 h-24 object-contain mx-auto"
+          />
+        </div>
+      </div>
+
+
+      <!-- Estadísticas del Movimiento -->
+      <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+        <p class="text-5xl font-extrabold mb-4">Estadísticas</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-3xl">
+          <div>
+            <strong>Tipo:</strong>
+            <a [routerLink]="`/types/${pokeMove()!.type.name.toLowerCase()}`">
+              <img
+                [src]="`assets/images/badge-types/${pokeMove()!.type.name.toLowerCase()}.png`"
+                [alt]="pokeMove()!.type.name"
+                class="hover:scale-102"
+              />
+            </a>
+          </div>
+          <div><strong>Poder:</strong> {{ pokeMove()!.power || 'N/A' }}</div>
+          <div><strong>Precisión:</strong> {{ pokeMove()!.accuracy || 'N/A' }}</div>
+          <div><strong>PP:</strong> {{ pokeMove()!.pp || 'N/A' }}</div>
+          <div><strong>Prioridad:</strong> {{ pokeMove()!.priority || '0' }}</div>
+          <div><strong>Clase de Daño:</strong> {{ pokeMove()!.damage_class.name | replace | titlecase }}</div>
+        </div>
+      </div>
+
+      <!-- Efectos del Movimiento -->
+      <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+        <p class="text-5xl font-extrabold mb-4">Efectos</p>
+        <div class="text-3xl">
+          @for (effect of pokeMove()!.effect_entries; track effect.language.name) {
+            @if (effect.language.name === 'en') {
+              <p><strong>Efecto:</strong> {{ effect.effect }}</p>
+              <p><strong>Efecto Corto:</strong> {{ effect.short_effect }}</p>
+            }
+          }
+          @if (pokeMove()!.effect_chance) {
+            <p><strong>Probabilidad de Efecto:</strong> {{ pokeMove()!.effect_chance }}%</p>
+          }
+        </div>
+      </div>
+
+      <!-- Metadatos del Movimiento -->
+      <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+        <p class="text-5xl font-extrabold mb-4">Metadatos</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-3xl">
+          <div><strong>Estado:</strong> {{ pokeMove()?.meta?.ailment?.name ?? 'Ninguna' | replace | titlecase }}</div>
+          <div><strong>Probabilidad de aplicar Estado:</strong> {{ pokeMove()?.meta?.ailment_chance || 0 }}%</div>
+          <div><strong>Categoría:</strong> {{ pokeMove()?.meta?.category!.name | replace | titlecase }}</div>
+          <div><strong>Probabilidad de Crítico:</strong> {{ pokeMove()?.meta?.crit_rate || 0 }}</div>
+          <div><strong>Absorción de Vida:</strong> {{ pokeMove()?.meta?.drain || 0 }}%</div>
+          <div><strong>Probabilidad de Retroceso:</strong> {{ pokeMove()?.meta?.flinch_chance || 0 }}%</div>
+        </div>
+      </div>
+
+      <!-- Flavor Text -->
+      <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+        <p class="text-5xl font-extrabold mb-4">Descripción</p>
+        <div class="mb-4">
+          <label for="generationSelect" class="text-3xl font-semibold">Selecciona Generación:</label>
+          <select
+            id="generationSelect"
+            [(ngModel)]="selectedGeneration"
+            class="select select-bordered w-full max-w-xs text-2xl"
+            (ngModelChange)="onGenerationChange()">
+            @for (gen of availableGenerations(); track gen) {
+              <option [value]="gen">{{ gen | replace | titlecase  }}</option>
+            }
+          </select>
+        </div>
+        <div class="text-4xl">
+          @if (selectedFlavorText()) {
+            <div class="card bg-base-300 rounded-box grid h-20 place-items-center">
+              <strong>{{ selectedGeneration() | replace | titlecase  }}:</strong> {{ selectedFlavorText() }}
+            </div>
+          } @else {
+            <span class="text-gray-500">No hay descripción disponible para esta generación</span>
+          }
+        </div>
+      </div>
+
+      <!-- Pokémon que Aprenden este Movimiento -->
+      <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+        <p class="text-5xl font-extrabold mb-4">Pokémon que Aprenden este Movimiento</p>
+        <!-- Loading State for Pokémon Details -->
+        @if (pokemonDetailsResource.isLoading()) {
+          <div class="text-center text-gray-500">Cargando Pokémon...</div>
+        } @else {
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            @for (poke of paginatedPokemonDetails(); track poke.name) {
+              <a [routerLink]="`/pokemon/${poke.name.toLowerCase()}`" class="hover:scale-105">
+                <div class="flex items-center px-4 py-2 text-3xl rounded-xl bg-primary text-white border">
+                  <img
+                    [src]="poke.sprite || 'assets/images/placeholder.png'"
+                    [alt]="poke.name"
+                    class="w-10 h-10 object-contain mr-2"
+                  />
+                  <span class="text-center flex-1">{{ poke.name | replace | titlecase }}</span>
+                </div>
+              </a>
+            }
+            @if (!paginatedPokemonDetails().length && !pokemonDetailsResource.isLoading()) {
+              <span class="text-gray-500">No hay Pokémon asociados</span>
+            }
+          </div>
+        }
+        <!-- Pagination Controls -->
+        @if (pokeMove()!.learned_by_pokemon.length > itemsPerPage) {
+          <div class="flex justify-center mt-4 gap-4">
+            <button
+              (click)="prevPokemonPage()"
+              [disabled]="currentPokemonPage() === 0 || pokemonDetailsResource.isLoading()"
+              class="btn btn-primary"
+              [class.btn-disabled]="currentPokemonPage() === 0 || pokemonDetailsResource.isLoading()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              (click)="nextPokemonPage()"
+              [disabled]="currentPokemonPage() === totalPokemonPages() - 1 || pokemonDetailsResource.isLoading()"
+              class="btn btn-primary"
+              [class.btn-disabled]="currentPokemonPage() === totalPokemonPages() - 1 || pokemonDetailsResource.isLoading()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+
+
+    </div>
+  }
+</div>

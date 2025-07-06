@@ -1,0 +1,219 @@
+<app-title [title]="'-'" />
+
+<div class="p-6 rounded-lg shadow-lg bg-base-100">
+ <!-- Notificación -->
+  @if (notification()) {
+    <div role="alert" class="alert animate-fadeIn fixed bottom-5 right-5 w-72"
+      [ngClass]="{'alert-success': notification()!.type === 'success', 'alert-error': notification()!.type === 'error'}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="font-pokeDP text-2xl">{{ notification()!.message | replace | titlecase  }}</span>
+    </div>
+  }
+
+  <!-- Información General del Pokémon -->
+  <div class="space-y-6">
+
+    <!-- Información básica: ID, Altura, Peso -->
+    <div class="grid grid-cols-3 gap-4 font-pokeDP text-4xl">
+      <div class="flex flex-col mt-20">
+        <p class="text-6xl font-extrabold">Informacion basica:</p>
+        <p class="text-4xl"><strong>Nombre:</strong> {{ pokemon()!.name | replace | titlecase }}
+        <p class="text-4xl"><strong>Altura:</strong> {{ pokemon()?.height ?? 0  / 10  | number:'1.1-2'  }} m
+        <p class="text-4xl"><strong>Peso:</strong> {{ pokemon()?.weight ?? 0 / 10 | number:'1.1-2'   }} kg</p>
+
+         <!-- @if (authService.isLoggedIn()) {
+          @if (isFavorite()) {
+            <button (click)="removeFromFavorites()" class="btn btn-secondary mt-2">Eliminar de favoritos</button>
+          } @else {
+            <button (click)="addToFavorites()" class="btn btn-secondary mt-2">Añadir a favoritos</button>
+          }
+        } -->
+  <div *ngIf="authService.isLoggedIn()" class="">
+    <button
+      (click)="toggleFavorite()"
+      class="transition-all duration-300 ease-in-out mt-2  badge bg-pink-300 p-6 animate-fadeIn hover:scale-102 text-2xl"
+      [title]="isFavorite() ? 'Eliminar de favoritos' : 'Añadir a favoritos'"
+    >
+    Favoritos
+      <!-- Corazón Outline -->
+      <svg
+        *ngIf="!isFavorite()"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6 text-red-500 transition-transform duration-300 transform hover:scale-110"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21.752 7.003c.55 1.425.03 3.01-1.202 4.242L12 20.5l-8.55-9.255C2.12 10.012 1.6 8.427 2.15 7.003a5.248 5.248 0 018.318-2.33L12 6.232l1.532-1.56a5.248 5.248 0 018.22 2.33z"
+        />
+      </svg>
+
+      <!-- Corazón Relleno -->
+      <svg
+        *ngIf="isFavorite()"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        class="w-6 h-6 text-red-500 transition-transform duration-300 transform hover:scale-110"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M12.001 4.529c2.349-2.36 6.158-2.356 8.506.005 2.341 2.353 2.341 6.162 0 8.515l-7.104 7.15a1.5 1.5 0 01-2.106 0l-7.104-7.15c-2.341-2.353-2.341-6.162 0-8.515a6.003 6.003 0 018.508-.005z"
+          clip-rule="evenodd"
+        />
+      </svg>
+  </button>
+</div>
+
+
+        <!-- Tipos -->
+      <div class="my-2">
+        <strong class="block text-4xl">Tipos:</strong>
+        <div class="flex flex-wrap gap-2 mt-2 w-50 ">
+          @for ( type of pokemon()?.types; track type.type.name) {
+            <a [routerLink]="`/types/${type.type.name.toLowerCase()}`" class="hover:scale-102">
+              <img [src]="`assets/images/badge-types/${type.type.name.toLowerCase()}.png`" alt="">
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- Experiencia Base -->
+      <p class="text-4xl"><strong>Experiencia Base:</strong> {{ pokemon()?.base_experience }}</p>
+
+      <!-- Habilidades -->
+      <div>
+        <strong class="block text-4xl">Habilidades:</strong>
+        <div class="flex flex-wrap gap-2 mt-2">
+          @for (ability of pokemon()?.abilities; track ability.ability?.name) {
+            <a [routerLink]="`/ability/${ability.ability!.name.toLowerCase()}`" class="hover:scale-102">
+              <span class="px-4 py-2 text-2xl font-semibold bg-primary text-white rounded">
+                {{ ability.ability!.name | replace | titlecase  }}
+              </span>
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+
+
+        <!-- Carrousel Image -->
+    <div class="flex justify-center mb-6 relative">
+      <!-- Imagen de marco de Pokédex -->
+      <img
+        src="assets/images/pokedexmark.png"
+        alt="Pokédex Frame"
+        class="absolute w-120 z-0 top-[-122px] rounded-t-2xl border-b-2"
+      />
+
+      <!-- Carrusel de Pokémon -->
+      <poke-carrousel [pokemon]="pokemon()" class="z-10" />
+    </div>
+
+
+
+    <!-- Sprite bw -->
+      <div class="flex justify-center items-center">
+        <img [src]="pokemon()?.sprites?.versions?.['generation-v']?.['black-white']?.animated?.front_default ?? pokemon()?.sprites?.other?.showdown?.front_default ?? pokemon()?.sprites?.front_default ?? substitute"
+          [alt]="pokemon()?.name" class="w-52 h-52 object-contain border-4 border-primary rounded-md bg-red-200 p-4" />
+      </div>
+
+    </div>
+
+      <!-- Información de Especies -->
+<div class="mt-6 font-pokeDP border p-4 bg-base-200">
+  <p class="text-6xl font-extrabold">Información de Especies:</p>
+  <div class="grid grid-cols-2 gap-4 text-4xl mt-4">
+    <p><strong>Felicidad Base:</strong> {{ species()?.base_happiness ?? 'N/A' }}</p>
+    <p><strong>Tasa de Captura:</strong> {{ species()?.capture_rate ?? 'N/A' }}</p>
+    <!-- <p><strong>Nombres:</strong> {{ species()!.names[6].language.name }}</p> -->
+    <p><strong>Grupos Huevo:</strong>
+      @for (group of species()?.egg_groups; track group.name) {
+        <span>{{ group.name | replace | titlecase }}</span>
+        @if (!$last) { , }
+      }
+    </p>
+    <p><strong>Habitat:</strong> {{ species()?.habitat?.name ?? 'N/A' | replace | titlecase  }}</p>
+    <p><strong>Legendario:</strong> {{ species()?.is_legendary ? 'Sí' : 'No' }}</p>
+    <p><strong>Mítico:</strong> {{ species()?.is_mythical ? 'Sí' : 'No' }}</p>
+  </div>
+  <p class="text-4xl mt-4"><strong>Descripción:</strong> {{ flavorText() }}</p>
+</div>
+
+
+    <!-- Movimientos -->
+
+    <div>
+      <label for="version-select" class="block mb-2 text-lg font-bold">Moveset Por Version:</label>
+      <select id="version-select" (change)="selectedVersion.set(targetPok.value)"
+        class="px-4 py-2 rounded bg-white text-black border" #targetPok>
+        <option value="default"> --Selecciona Version-- </option>
+        @for (version of versionGroups(); track version) {
+        <option [value]="version">
+          {{ version | replace | titlecase }}
+        </option>
+        }
+      </select>
+    </div>
+
+    @if (selectedVersion()) {
+    @for (method of orderedMethods(); track method) {
+    <div class="mt-6">
+      <h3 class="text-xl font-bold mb-2">
+        Método: {{ method | replace | titlecase }}
+      </h3>
+      <div class="grid grid-cols-5 gap-2">
+        @for (move of groupedMoves()[method]; track move) {
+        <a [routerLink]="`/moves/${move.move.name.toLowerCase()}`" class="hover:scale-102">
+          <div class="px-4 py-2 text-2xl font-semibold rounded-xl bg-blue-300 border text-black font-pokeDP">
+            {{ move.move.name | replace | titlecase }} <br>
+            {{ method === 'level-up' ? ('Nivel: ' + move.detail.level_learned_at) : '' }}
+          </div>
+        </a>
+        }
+      </div>
+    </div>
+    }
+  }
+    <!-- Estadísticas -->
+<div>
+  <strong class=" font-pokeDP block text-7xl">Estadísticas:</strong>
+  <div class="grid grid-cols-1 gap-4 mt-2 bg-base-300 p-6 border-2 rounded">
+    @for (stat of pokemon()?.stats; track stat.stat.name) {
+    <div class="flex flex-col">
+      <div class="flex justify-between">
+        <span class="text-sm text-gray-600">{{ stat.stat.name | titlecase }}:</span>
+        <span class="font-semibold">{{ stat.base_stat }}</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+        <div
+          class="h-2.5 rounded-full"
+          [ngClass]="{
+            'bg-red-500': stat.base_stat < 50,
+            'bg-yellow-500': stat.base_stat >= 50 && stat.base_stat < 98,
+            'bg-green-500': stat.base_stat >= 98 && stat.base_stat < 130,
+            'bg-blue-500': stat.base_stat >= 130
+          }"
+          [style.width.%]="(stat.base_stat / 255) * 100"
+        ></div>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+
+
+  </div>
+
+
+
+
+</div>

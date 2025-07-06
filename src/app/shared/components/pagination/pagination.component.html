@@ -1,0 +1,65 @@
+<div class="join flex justify-center items-center gap-1 m-5 ">
+
+  <!-- Botón anterior -->
+  <button class="join-item btn"
+    [disabled]="activePage() === 1"
+    [routerLink]="[]"
+    [queryParams]="{ page: activePage() - 1 }"
+    (click)="activePage.set(activePage() - 1)"
+    >
+    &lt;
+  </button>
+
+  <!-- Primer número -->
+  <button class="join-item btn"
+    [class.btn-error]="1 === activePage()"
+    [routerLink]="[]"
+    [queryParams]="{ page: 1 }"
+    (click)="activePage.set(1)">
+    1
+  </button>
+
+  <!-- ... si hay salto desde página 1 -->
+  @if (hasLeftDots()) {
+    <button class="join-item btn btn-disabled">...</button>
+  }
+
+  <!-- Números del medio -->
+  @for (page of getPages().slice(1, -1); track page) {
+    <button class="join-item btn"
+      [class.btn-error]="page === activePage()"
+      [routerLink]="[]"
+      [queryParams]="{ page: page }"
+      (click)="activePage.set(page)">
+      {{ page }}
+    </button>
+  }
+
+  <!-- ... si hay salto hacia última -->
+  @if (hasRightDots()) {
+    <button class="join-item btn btn-disabled">...</button>
+  }
+
+  <!-- Última página -->
+  @if (pages() > 1) {
+    <button class="join-item btn"
+      [class.btn-error]="pages() === activePage()"
+      [routerLink]="[]"
+      [queryParams]="{ page: pages() }"
+      (click)="activePage.set(pages())">
+      {{ pages() }}
+    </button>
+  }
+
+  <!-- Botón siguiente -->
+  <button class="join-item btn"
+    [disabled]="activePage() === pages()"
+    [routerLink]="[]"
+    [queryParams]="{ page: activePage() + 1 }"
+    (click)="activePage.set(activePage() + 1)"
+    (keypress.right)="activePage.set(activePage() + 1)"
+    >
+    &gt;
+  </button>
+
+</div>

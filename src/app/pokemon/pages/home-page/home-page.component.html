@@ -1,0 +1,51 @@
+<div class=" mt-8">
+  <!-- Cuadro de texto superior -->
+  <div class="mx-4 border-[4px] border-gray-700 rounded-xl shadow-md mb-10 ">
+    <div
+      class="font-pokeDP text-6xl border-[3px] rounded border-yellow-500 p-4 bg-white text-gray-800 font-semibold shadow-inner text-center"
+      style="box-shadow: inset 0 0 0 8px #000000;">
+      ¿Qué quieres hacer ahora?
+    </div>
+  </div>
+
+  <!-- Botones tipo menú Pokémon -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
+    <a routerLink="/pokemon" routerLinkActive="router-link-active"
+      class="bg-red-600 hover:bg-red-700 text-white text-xl font-bold py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center">
+      Pokémon
+    </a>
+
+    <a routerLink="/moves" routerLinkActive="router-link-active"
+      class="bg-yellow-600 hover:bg-yellow-700 text-white text-xl font-bold py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center">
+      Movimientos
+    </a>
+
+    <a routerLink="/ability" routerLinkActive="router-link-active"
+      class="bg-green-600 hover:bg-green-700 text-white text-xl font-bold py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center">
+      Habilidades
+    </a>
+
+    <a routerLink="/types" routerLinkActive="router-link-active"
+      class="bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center">
+      Tipos
+    </a>
+
+    @if (authService.isLoggedIn()) {
+    <a routerLink="/map" routerLinkActive="router-link-active"
+      class="bg-purple-600 hover:bg-purple-700 text-white text-xl font-bold py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center col-span-1 sm:col-span-2 mx-auto w-full sm:w-1/2">
+      Mapas
+    </a>
+    <a routerLink="/fav" routerLinkActive="router-link-active"
+      class="bg-pink-600 hover:bg-pink-700 text-white text-xl font-bold py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center col-span-1 sm:col-span-2 mx-auto w-full sm:w-1/2">
+      Tus Favoritos
+    </a>
+  }@else {
+    <a routerLink="/auth/register" routerLinkActive="router-link-active"
+      class="bg-pink-600 font-pokeDP hover:bg-pink-700 text-white text-2xl  py-6 px-4 rounded-md border-2 border-white shadow-[2px_2px_0_0_black] flex items-center justify-center col-span-1 sm:col-span-2 mx-auto w-full sm:w-1/2">
+      ¿No tienes cuenta? <br> Registrate ya y accede a una selección de mapas regionales <br> así como la posibilidad de guardar y ver a tus pokemon favoritos
+
+    </a>
+  }
+  </div>
+
+</div>

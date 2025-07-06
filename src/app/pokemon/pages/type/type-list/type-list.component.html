@@ -1,0 +1,20 @@
+<app-title title="Lista de Tipos"/>
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-3 mt-16 mb-6">
+
+  @for (type of typeResource.value()?.results; track $index) {
+    <div class="w-65 bg-base-100 shadow-xl animate-fadeIn hover:scale-105 transition-transform duration-200 mx-auto">
+      <a [routerLink]="`${type.name}`" class="block  text-secondary">
+
+        <img [src]="`assets/images/bg-types/${type.name}.png`" alt="" class="rounded-t-2xl ">
+
+        <div class="card-body p-4 items-center bg-blue-600 text-center rounded-b-xl">
+          <h2 class="card-title text-md text-amber-50 font-medium capitalize">
+            {{ type.name }}
+          </h2>
+        </div>
+      </a>
+    </div>
+  }
+
+</div>

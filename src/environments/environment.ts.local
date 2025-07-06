@@ -1,0 +1,4 @@
+export const environment = {
+  baseUrl:'https://pokeapi.co/api/v2',
+  backUrl:'http://localhost:3000/api'
+};

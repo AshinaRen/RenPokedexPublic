@@ -1,0 +1,76 @@
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: Poke;
+  src: url("../public/assets/fonts/pkmn.ttf");
+}
+@font-face {
+  font-family: PokeDP;
+  src: url("../public/assets/fonts/pokemon-dp.ttf")
+}
+
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, cupcake, caramellatte;
+}
+
+@theme {
+
+  --font-poke: Poke, "serif";
+  --font-pokeDP: PokeDP;
+
+  --animate-fadeIn: fadeIn 0.3s ease-in-out;
+
+  @keyframes fadeIn {
+    0% { opacity: 0;}
+    100% { opacity: 1;}
+  }
+}
+
+
+html, body {
+  touch-action: pan-x pan-y;
+}
+
+html {
+  transform: scale(0.70); /* Escala todo el contenido al 75% */
+  transform-origin: top left; /* Asegura que la escala comience desde la esquina superior izquierda */
+  width: calc(100% / 0.70); /* Compensa el ancho para evitar barras de desplazamiento */
+  height: calc(100% / 0.85); /* Compensa la altura */
+  overflow-x: hidden;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Asegúrate de que el contenedor principal no tenga espacio extra */
+.main-container {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Si el footer está causando el espacio, ajústalo */
+footer {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Opcional: Forzar que el contenido ocupe todo el espacio disponible */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1 0 auto; /* Hace que el contenido principal crezca pero no se encoga */
+}
+
+footer {
+  flex-shrink: 0; /* Evita que el footer se comprima */
+}

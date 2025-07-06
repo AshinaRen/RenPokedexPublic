@@ -1,0 +1,17 @@
+
+<div class="w-65 bg-base-100 shadow-xl animate-fadeIn hover:scale-105 transition-transform duration-200 mx-auto">
+  <a [routerLink]="detailUrl()" class="block text-secondary">
+    <figure class="bg-blue-100 rounded-t-xl flex justify-center items-center h-32" [ngStyle]="backgroundImageStyle()">
+      <img
+        [src]="imageUrl()"
+        [alt]="pokemon().name"
+        class="w-37 h-37 object-contain"
+      />
+    </figure>
+    <div class="card-body p-4 items-center bg-red-600 text-center rounded-b-xl">
+      <h2 class="card-title text-md text-amber-50 font-medium capitalize">
+       {{ pokemon().id }} - {{ pokemon().name | replace | titlecase }}
+      </h2>
+    </div>
+  </a>
+</div>

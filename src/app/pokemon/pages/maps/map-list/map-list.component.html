@@ -1,0 +1,26 @@
+
+<app-title title="Mapas de las Regiones 1-6" class="mt-8"/>
+
+<div class="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-3 mt-8 ">
+@for (map of mapsList; track $index) {
+
+  <div class="w-125 bg-base-100 shadow-xl animate-fadeIn hover:scale-105 transition-transform duration-200 mx-auto">
+    <a [routerLink]="map" class="block text-secondary">
+      <figure class="bg-blue-100 rounded-t-xl flex justify-center items-center h-62" [ngStyle]="getMapBackgroundStyle(map)">
+      </figure>
+      <div class="card-body p-4 items-center bg-purple-600 text-center rounded-b-xl">
+        <h2 class="card-title text-md text-amber-50 font-medium capitalize">
+         {{ map }}
+        </h2>
+      </div>
+    </a>
+  </div>
+
+}
+</div>
+
+<div class="m-8 p-8 border border-amber-400 rounded-2xl bg-blue-950">
+<p class="font-pokeDP text-4xl text-white">Credits to EUANVERSE DeviantArt</p>
+<a href="https://www.deviantart.com/euanverse/gallery/71654862/pokemon-region-maps" class="hover:text-red-700 text-xl text-green-400">Link</a>
+</div>
+

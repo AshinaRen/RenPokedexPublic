@@ -1,0 +1,32 @@
+<app-title title="Pokémon Favoritos" />
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 mt-16 mb-6">
+  @if (favoritesResource.isLoading()) {
+    <div class="w-59 gap-4 items-center mx-auto justify-center">
+      <div class="skeleton h-42 w-full">
+        <div class="mx-auto p-5 font-pokeDP text-2xl">Cargando favoritos...</div>
+      </div>
+    </div>
+  } @else if (!authService.isLoggedIn()) {
+    <div class="w-full text-center">
+      <p class="font-pokeDP text-3xl text-red-600">Por favor, inicia sesión para ver tus Pokémon favoritos.</p>
+      <a [routerLink]="'/auth'" class="btn bg-red-600 text-white mt-4">Iniciar sesión</a>
+    </div>
+  } @else if (favoritesResource.value()?.results?.length === 0) {
+    <div class="w-full text-center">
+      <p class="font-pokeDP text-3xl text-red-600">No tienes Pokémon favoritos aún.</p>
+      <a [routerLink]="'/pokemon'" class="btn bg-red-600 text-white mt-4">Explorar Pokémon</a>
+    </div>
+  } @else {
+    @for (poke of favoritesResource.value()?.results; track poke.id) {
+      <poke-card [pokemon]="poke" />
+    }
+  }
+</div>
+
+@defer (on timer(500)) {
+  <app-pagination
+    [pages]="totalPages()"
+    [currentPage]="paginationService.currentPage()"
+  />
+}

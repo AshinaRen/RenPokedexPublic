@@ -1,0 +1,204 @@
+<app-title [title]="pokeType()!.name ? (pokeType()!.name | titlecase) : 'Tipo de Pokémon'" />
+
+<div class="p-6 rounded-lg shadow-lg bg-base-100 font-pokeDP">
+  <!-- Información Principal del Tipo -->
+  <div class="space-y-6">
+    <!-- Nombre y Sprite del Tipo -->
+    <div class="flex justify-center items-center mb-6">
+      <img
+        [src]="
+        pokeType()!.sprites['generation-ix']['scarlet-violet'].name_icon ?
+        pokeType()!.sprites['generation-ix']['scarlet-violet'].name_icon :
+        pokeType()!.sprites['generation-iii'].colosseum.name_icon"
+        [alt]="pokeType()?.name"
+        class="w-82 h-42 object-contain border-4 border-primary rounded-md bg-base-200 p-4"
+      />
+    </div>
+
+    <!-- Relaciones de Daño -->
+    <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+      <p class="text-5xl font-extrabold mb-4">Relaciones de Daño</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
+        <!-- Daño Doble Recibido -->
+        <div>
+          <strong class="block text-3xl mb-2">x2 Recibido:</strong>
+          <div class="flex flex-wrap gap-2">
+            @for (type of pokeType()!.damage_relations.double_damage_from; track type.name) {
+              <a [routerLink]="`/types/${type.name.toLowerCase()}`" class="hover:scale-105">
+                <img [src]="`assets/images/badge-types/${type.name.toLowerCase()}.png`" alt="">
+              </a>
+            }
+            @if (!pokeType()!.damage_relations.double_damage_from.length) {
+              <span class="text-gray-500">Ninguno</span>
+            }
+          </div>
+        </div>
+
+        <!-- Daño Doble Infligido -->
+        <div>
+          <strong class="block text-3xl mb-2">x2 Infligido:</strong>
+          <div class="flex flex-wrap gap-2">
+            @for (type of pokeType()!.damage_relations.double_damage_to; track type.name) {
+              <a [routerLink]="`/types/${type.name.toLowerCase()}`" class="hover:scale-105">
+                <img [src]="`assets/images/badge-types/${type.name.toLowerCase()}.png`" alt="">
+              </a>
+            }
+            @if (!pokeType()!.damage_relations.double_damage_to.length) {
+              <span class="text-gray-500">Ninguno</span>
+            }
+          </div>
+        </div>
+
+        <!-- Medio Daño Recibido -->
+        <div>
+          <strong class="block text-3xl mb-2">1/2 Recibido:</strong>
+          <div class="flex flex-wrap gap-2">
+            @for (type of pokeType()!.damage_relations.half_damage_from; track type.name) {
+              <a [routerLink]="`/types/${type.name.toLowerCase()}`" class="hover:scale-105">
+                <img [src]="`assets/images/badge-types/${type.name.toLowerCase()}.png`" alt="">
+              </a>
+            }
+            @if (!pokeType()!.damage_relations.half_damage_from.length) {
+              <span class="text-gray-500">Ninguno</span>
+            }
+          </div>
+        </div>
+
+        <!-- Medio Daño Infligido -->
+        <div>
+          <strong class="block text-3xl mb-2">1/2 Infligido:</strong>
+          <div class="flex flex-wrap gap-2">
+            @for (type of pokeType()!.damage_relations.half_damage_to; track type.name) {
+              <a [routerLink]="`/types/${type.name.toLowerCase()}`" class="hover:scale-105">
+                <img [src]="`assets/images/badge-types/${type.name.toLowerCase()}.png`" alt="">
+              </a>
+            }
+            @if (!pokeType()!.damage_relations.half_damage_to.length) {
+              <span class="text-gray-500">Ninguno</span>
+            }
+          </div>
+        </div>
+
+        <!-- Sin Daño Recibido -->
+        <div>
+          <strong class="block text-3xl mb-2">Sin Daño Recibido:</strong>
+          <div class="flex flex-wrap gap-2">
+            @for (type of pokeType()!.damage_relations.no_damage_from; track type.name) {
+              <a [routerLink]="`/types/${type.name.toLowerCase()}`" class="hover:scale-105">
+                <img [src]="`assets/images/badge-types/${type.name.toLowerCase()}.png`" alt="">
+              </a>
+            }
+            @if (!pokeType()!.damage_relations.no_damage_from.length) {
+              <span class="text-gray-500">Ninguno</span>
+            }
+          </div>
+        </div>
+
+        <!-- Sin Daño Infligido -->
+        <div>
+          <strong class="block text-3xl mb-2">Sin Daño Infligido:</strong>
+          <div class="flex flex-wrap gap-2">
+            @for (type of pokeType()!.damage_relations.no_damage_to; track type.name) {
+              <a [routerLink]="`/types/${type.name.toLowerCase()}`" class="hover:scale-105">
+                <img [src]="`assets/images/badge-types/${type.name.toLowerCase()}.png`" alt="">
+              </a>
+            }
+            @if (!pokeType()!.damage_relations.no_damage_to.length) {
+              <span class="text-gray-500">Ninguno</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movimientos Asociados -->
+    <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+      <p class="text-5xl font-extrabold mb-4">Movimientos</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        @for (move of paginatedMoves(); track move.name) {
+          <a [routerLink]="`/moves/${move.name.toLowerCase()}`" class="hover:scale-105">
+            <div class="px-4 py-2 text-2xl font-semibold rounded-xl bg-blue-300 border text-black text-center">
+              {{ move.name | replace | titlecase }}
+            </div>
+          </a>
+        }
+        @if (!paginatedMoves().length) {
+          <span class="text-gray-500">No hay movimientos asociados</span>
+        }
+      </div>
+      <!-- Controles de paginación simples-->
+      @if (pokeType()!.moves.length > itemsPerPage) {
+        <div class="flex justify-center mt-4 gap-4">
+          <button
+            (click)="prevMovePage()"
+            [disabled]="currentMovePage() === 0"
+            class="btn btn-primary"
+            [class.btn-disabled]="currentMovePage() === 0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            (click)="nextMovePage()"
+            [disabled]="currentMovePage() === totalMovePages() - 1"
+            class="btn btn-primary"
+            [class.btn-disabled]="currentMovePage() === totalMovePages() - 1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Pokémon con este Tipo -->
+    <div class="mt-6 border p-4 bg-base-200 rounded-lg">
+      <p class="text-5xl font-extrabold mb-4">Pokémon con este Tipo</p>
+      <!-- Loading State -->
+      @if (pokemonDetailsResource.isLoading()) {
+        <div class="text-center text-gray-500">Cargando Pokémon...</div>
+      } @else {
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          @for (poke of paginatedPokemonDetails(); track poke.name) {
+            <a [routerLink]="`/pokemon/${poke.name.toLowerCase()}`" class="hover:scale-105">
+              <div class="flex items-center px-4 py-2 text-2xl rounded-xl bg-primary text-white border">
+                <img
+                  [src]="poke.sprite || 'assets/images/placeholder.png'"
+                  [alt]="poke.name"
+                  class="w-10 h-10 object-contain mr-2"
+                />
+                <span class="text-center flex-1">{{ poke.name | replace | titlecase }}</span>
+              </div>
+            </a>
+          }
+          @if (!paginatedPokemonDetails().length && !pokemonDetailsResource.isLoading()) {
+            <span class="text-gray-500">No hay Pokémon asociados</span>
+          }
+        </div>
+      }
+      <!-- Pagination Controls for Pokémon -->
+      @if (pokeType()!.pokemon.length > itemsPerPage) {
+        <div class="flex justify-center mt-4 gap-4">
+          <button
+            (click)="prevPokemonPage()"
+            [disabled]="currentPokemonPage() === 0 || pokemonDetailsResource.isLoading()"
+            class="btn btn-primary"
+            [class.btn-disabled]="currentPokemonPage() === 0 || pokemonDetailsResource.isLoading()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            (click)="nextPokemonPage()"
+            [disabled]="currentPokemonPage() === totalPokemonPages() - 1 || pokemonDetailsResource.isLoading()"
+            class="btn btn-primary"
+            [class.btn-disabled]="currentPokemonPage() === totalPokemonPages() - 1 || pokemonDetailsResource.isLoading()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
